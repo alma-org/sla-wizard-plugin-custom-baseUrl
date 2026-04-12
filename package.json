@@ -1,5 +1,5 @@
 {
-  "name": "sla-wizard-plugin-custom-baseUrl",
+  "name": "sla-wizard-plugin-custom-baseurl",
   "version": "1.0.0",
   "description": "Plugin that overrides the nginx proxy_pass target per endpoint using the x-nginx-server-baseurl OAS extension",
   "main": "index.js",
