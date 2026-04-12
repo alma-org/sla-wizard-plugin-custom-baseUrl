@@ -1,0 +1,31 @@
+sla4oas: 1.0.0
+context:
+  id: sla-japarejo_us_es
+  type: agreement
+  api:
+    $ref: ../hpc-oas.yaml
+  provider: ISAGroup
+  customer: ProUser S.L
+  apikeys:
+    - 6121788b3c78f416a5b10627edf417dd
+  validity:
+    from: '2025-01-01T00:00:00+00:00'
+    to: '2026-01-01T00:00:00+00:00'
+metrics:
+  requests:
+    type: integer
+    format: int64
+    description: Number of requests
+plan:
+  name: pro
+  pricing:
+    cost: 3
+    currency: EUR
+    billing: monthly
+  availability: R/00:00:00Z/23:59:59Z
+  rates:
+    /v1/chat/completions:
+      post:
+        requests:
+          - max: 10
+            period: minute

@@ -1,0 +1,246 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: LLM-mock API
+  description: LLM-mock API with SLA for researchers (normal vs premium).
+  contact:
+    name: piyook llm-mock 
+    url: https://github.com/piyook/llm-mock?tab=readme-ov-file
+servers:
+  - url: http://localhost:8000
+paths:
+  /models/qwen/v1/chat/completions:
+    x-nginx-strip: "/models/qwen"
+    post:
+      summary: Sends a prompt and gets the response
+      description: >
+        It needs a body with the same OpenAI API format for Chat Completions
+        (`model`, `messages`, `temperature`, etc.) y and returns an object containing the response.
+      operationId: postChatCompletion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatCompletionRequest'
+            example:
+              model: "claude-sonnet-4.6"
+              messages:
+                - role: "user"
+                  content: "Hello, how are you?"
+              temperature: 1
+              top_p: 1
+              frequency_penalty: 0
+              presence_penalty: 0
+              n: 1
+              stream: false
+      responses:
+        '200':
+          description: Response of the LLM
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatCompletionResponse'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /models/chatgpt/v1/chat/completions:
+    x-nginx-strip: "/models/chatgpt"
+    x-nginx-server-baseurl: http://localhost:8001
+    post:
+      summary: Sends a prompt and gets the response
+      description: >
+        It needs a body with the same OpenAI API format for Chat Completions
+        (`model`, `messages`, `temperature`, etc.) y and returns an object containing the response.
+      operationId: postChatCompletion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatCompletionRequest'
+            example:
+              model: "gpt-3.5-turbo"
+              messages:
+                - role: "user"
+                  content: "Hello, how are you?"
+              temperature: 1
+              top_p: 1
+              frequency_penalty: 0
+              presence_penalty: 0
+              n: 1
+              stream: false
+      responses:
+        '200':
+          description: Response of the LLM
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatCompletionResponse'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /models/claude/v1/chat/completions:
+    x-nginx-strip: "/models/claude"
+    x-nginx-server-baseurl: http://localhost:8002
+    post:
+      summary: Sends a prompt and gets the response
+      description: >
+        It needs a body with the same OpenAI API format for Chat Completions
+        (`model`, `messages`, `temperature`, etc.) y and returns an object containing the response.
+      operationId: postChatCompletion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatCompletionRequest'
+            example:
+              model: "claude-sonnet-4.6"
+              messages:
+                - role: "user"
+                  content: "Hello, how are you?"
+              temperature: 1
+              top_p: 1
+              frequency_penalty: 0
+              presence_penalty: 0
+              n: 1
+              stream: false
+      responses:
+        '200':
+          description: Response of the LLM
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatCompletionResponse'
+        default:
+          description: Unexpected Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    ChatCompletionRequest:
+      type: object
+      required:
+        - model
+        - messages
+      properties:
+        model:
+          type: string
+          example: "Qwen/Qwen2.5-Coder-32B-Instruct"
+        messages:
+          type: array
+          items:
+            type: object
+            required:
+              - role
+              - content
+            properties:
+              role:
+                type: string
+                enum: [system, user, assistant]
+                example: "user"
+              content:
+                type: string
+                example: "Hello, how are you?"
+        temperature:
+          type: number
+          format: float
+          example: 1
+        top_p:
+          type: number
+          format: float
+          example: 1
+        n:
+          type: integer
+          example: 1
+        stream:
+          type: boolean
+          example: false
+        stop:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        max_tokens:
+          type: integer
+          example: 100
+        presence_penalty:
+          type: number
+          format: float
+          example: 0
+        frequency_penalty:
+          type: number
+          format: float
+          example: 0
+
+    ChatCompletionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "chatcmpl-6sf37lXn5paUcuf8UaurpMIKRMsTe"
+        object:
+          type: string
+          example: "chat.completion"
+        created:
+          type: integer
+          format: int64
+          example: 1678485525
+        model:
+          type: string
+          example: "Qwen/Qwen2.5-Coder-32B-Instruct"
+        usage:
+          type: object
+          properties:
+            prompt_tokens:
+              type: integer
+              example: 12
+            completion_tokens:
+              type: integer
+              example: 99
+            total_tokens:
+              type: integer
+              example: 111
+        choices:
+          type: array
+          items:
+            type: object
+            properties:
+              index:
+                type: integer
+                example: 0
+              message:
+                type: object
+                properties:
+                  role:
+                    type: string
+                    example: "assistant"
+                  content:
+                    type: string
+                    example: "Lorem Ipsum text..."
+              finish_reason:
+                type: string
+                example: "stop"
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
