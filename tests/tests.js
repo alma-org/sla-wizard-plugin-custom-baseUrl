@@ -622,9 +622,9 @@ describe("sla-wizard-plugin-custom-baseUrl Test Suite", function () {
 
     it("nginx.conf does not contain any rate-limiting location blocks (those are in conf.d)", function () {
       const content = fs.readFileSync(path.join(outDir, "nginx.conf"), "utf8");
-      // Rate-limited location names contain the context_id pattern
-      expect(content).to.not.include("sla-dgalvan_us_es");
-      expect(content).to.not.include("sla-japarejo_us_es");
+      // Rate-limited location BLOCKS move to conf.d — nginx.conf must not have them
+      expect(content).to.not.match(/location\s+\/sla-dgalvan/);
+      expect(content).to.not.match(/location\s+\/sla-japarejo/);
     });
 
     // ── idempotency ──────────────────────────────────────────────────────────

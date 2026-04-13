@@ -4,7 +4,7 @@ A plugin for [SLA Wizard](../sla-wizard) and [sla-wizard-nginx-confd](../sla-wiz
 
 When a path declares `x-nginx-server-baseurl`, nginx will proxy that endpoint to the **custom backend URL** instead of the global `servers[0].url`. Endpoints without the extension continue to use the global default.
 
-```
+```text
 Client → nginx:  POST /models/chatgpt/v1/chat/completions
 nginx → backend: POST http://localhost:8001/v1/chat/completions   ← custom URL
 
@@ -120,7 +120,7 @@ node my-cli.js config-nginx-baseurl \
 
 Output:
 
-```
+```text
 nginx-output/
 ├── nginx.conf          ← server block + URI routing rules
 └── conf.d/
@@ -147,7 +147,7 @@ node my-cli.js add-to-baseurl-confd \
 ### CLI options
 
 | Option | Description | Default |
-|---|---|---|
+| --- | --- | --- |
 | `-o, --outDir <dir>` | Output directory | **required** |
 | `--oas <path>` | Path to OAS v3 file | `./specs/oas.yaml` |
 | `--sla <path>` | Single SLA file, directory of SLAs, or URL | `./specs/sla.yaml` |
